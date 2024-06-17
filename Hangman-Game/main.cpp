@@ -10,6 +10,7 @@ void Render();
 void Shutdown();
 
 bool g_exitGame = false;
+Game g_game;
 int main() {
 	Initialize();
 	while (g_exitGame) {
@@ -23,6 +24,7 @@ int main() {
 
 void Initialize()
 {
+	g_game.OnInit();
 }
 
 void GetInput()
@@ -31,12 +33,15 @@ void GetInput()
 
 void Update()
 {
+	g_game.OnUpdate();
 }
 
 void Render()
 {
+	g_game.OnRender();
 }
 
 void Shutdown()
 {
+	g_game.OnShutdown();
 }
