@@ -13,7 +13,7 @@ bool g_exitGame = false;
 Game g_game;
 int main() {
 	Initialize();
-	while (g_exitGame) {
+	while (!g_exitGame) {
 		GetInput();
 		Update();
 		Render();
@@ -29,6 +29,7 @@ void Initialize()
 
 void GetInput()
 {
+	g_game.OnInput();
 }
 
 void Update()
