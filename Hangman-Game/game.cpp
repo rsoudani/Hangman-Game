@@ -1,15 +1,32 @@
 #include "Game.h"
 #include <ctime>
 #include <iostream>
+#include <fstream> 
+#include <sstream> 
+#include <string> 
 #include "HangmanStages.h"
 
 using namespace std;
 
 void Game::OnInit()
 {
-	m_guessedMask = 0;
 	srand(std::time(NULL));
+
+	ifstream inputFile("words.txt");
+	if (inputFile.is_open()) {
+		std::string line;
+		vector<string> lines;
+		while (std::getline(inputFile, line)) {
+			string cell;
+			std::stringstream ss(line);
+			while (getline(ss, cell, ' ')) {
+				lines.push_back(cell);
+			}
+		}
+		m_wordsPool = lines;
+	}
 	m_word = m_wordsPool[rand() % m_wordsPool.size()];
+	m_guessedMask = 0;
 	m_gameState = GameState::START;
 	m_guessedLetter = NULL;
 	m_missedLetters = 0;
