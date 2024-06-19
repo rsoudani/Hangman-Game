@@ -12,7 +12,7 @@ class Game {
 public:
 	void OnInit();
 	void OnInput();
-	void OnUpdate();
+	bool OnUpdate();
 	void OnRender();
 	void OnShutdown();
 private:
@@ -21,5 +21,6 @@ private:
 	int m_guessedMask;
 	GameState m_gameState = GameState::START;
 	char m_guessedLetter;
+	int m_missedLetters;
 
 };

@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <ctime>
 #include <iostream>
+#include "HangmanStages.h"
 
 using namespace std;
 
@@ -11,26 +12,42 @@ void Game::OnInit()
 	m_word = m_wordsPool[rand() % m_wordsPool.size()];
 	m_gameState = GameState::START;
 	m_guessedLetter = NULL;
-	OnRender();
-
+	m_missedLetters = 0;
 }
 
 void Game::OnInput()
 {
-	cout << "Podaj litere: ";
-	cin >> m_guessedLetter;
+	if (m_gameState == GameState::UPDATE) {
+		cout << "Podaj litere: ";
+		cin >> m_guessedLetter;
+	}
 }
 
-void Game::OnUpdate()
+bool Game::OnUpdate()
 {
-
-	if (m_guessedLetter != NULL)
+	if (m_guessedLetter != NULL) {
+		bool letterFound = false;
 		for (int i = 0; i < m_word.size(); ++i) {
 			if (m_word[i] == m_guessedLetter) {
 				m_guessedMask |= (1 << i);
+				letterFound = true;
 			}
 		}
-	m_guessedLetter = NULL;
+		if (!letterFound) {
+			m_missedLetters++;
+		}
+		m_guessedLetter = NULL;
+	}
+
+	int fullMask = (1 << m_word.size()) - 1;
+	if (m_missedLetters >= HANGMAN_STAGES.size() - 1 || m_guessedMask == fullMask) {
+		m_gameState = GameState::FINISH;
+		return true;
+	}
+	else {
+		m_gameState = GameState::UPDATE;
+		return false;
+	}
 }
 
 void Game::OnRender()
@@ -44,7 +61,9 @@ void Game::OnRender()
 			cout << "_ ";
 		}
 	}
-	cout << endl;
+	cout << endl << endl;
+	cout << HANGMAN_STAGES[m_missedLetters];
+	cout << endl << endl;
 }
 
 void Game::OnShutdown()

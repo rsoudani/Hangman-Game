@@ -5,7 +5,7 @@ using namespace std;
 
 void Initialize();
 void GetInput();
-void Update();
+bool Update();
 void Render();
 void Shutdown();
 
@@ -15,7 +15,7 @@ int main() {
 	Initialize();
 	while (!g_exitGame) {
 		GetInput();
-		Update();
+		g_exitGame = Update();
 		Render();
 	}
 	Shutdown();
@@ -32,9 +32,9 @@ void GetInput()
 	g_game.OnInput();
 }
 
-void Update()
+bool Update()
 {
-	g_game.OnUpdate();
+	return g_game.OnUpdate();
 }
 
 void Render()
