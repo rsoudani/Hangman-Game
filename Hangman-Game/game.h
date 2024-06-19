@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 class Game {
 
@@ -21,7 +22,7 @@ private:
 	int m_guessedMask;
 	GameState m_gameState = GameState::START;
 	char m_guessedLetter;
-	int m_missedLetters;
+	std::unordered_set<char> m_missedLetters;
 	bool m_isWin;
 
 };

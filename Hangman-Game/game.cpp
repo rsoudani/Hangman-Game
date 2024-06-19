@@ -29,7 +29,7 @@ void Game::OnInit()
 	m_guessedMask = 0;
 	m_gameState = GameState::START;
 	m_guessedLetter = NULL;
-	m_missedLetters = 0;
+	m_missedLetters.clear();
 	m_isWin = false;
 }
 
@@ -52,12 +52,12 @@ bool Game::OnUpdate()
 			}
 		}
 		if (!letterFound) {
-			m_missedLetters++;
+			m_missedLetters.insert(m_guessedLetter);
 		}
 		m_guessedLetter = NULL;
 	}
 
-	if (m_missedLetters >= HANGMAN_STAGES.size() - 1) {
+	if (m_missedLetters.size() >= HANGMAN_STAGES.size() - 1) {
 		m_gameState = GameState::FINISH;
 		return true;
 	}
@@ -86,7 +86,8 @@ void Game::OnRender()
 		}
 	}
 	cout << endl << endl;
-	cout << HANGMAN_STAGES[m_missedLetters];
+	cout << HANGMAN_STAGES[m_missedLetters.size()] << endl;
+	cout << "Nietrafione litery: " << string(m_missedLetters.begin(), m_missedLetters.end());
 	cout << endl << endl;
 
 	if (m_gameState == GameState::FINISH) {
@@ -94,7 +95,7 @@ void Game::OnRender()
 			cout << "Wygrana, gratulacje!";
 		}
 		else {
-			cout << "Przegrana!";
+			cout << "Przegrana! Szukane slowo to: " << m_word;
 		}
 		cin.ignore(256, '\n');
 		cin.ignore();
