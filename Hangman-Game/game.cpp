@@ -13,6 +13,7 @@ void Game::OnInit()
 	m_gameState = GameState::START;
 	m_guessedLetter = NULL;
 	m_missedLetters = 0;
+	m_isWin = false;
 }
 
 void Game::OnInput()
@@ -39,15 +40,21 @@ bool Game::OnUpdate()
 		m_guessedLetter = NULL;
 	}
 
-	int fullMask = (1 << m_word.size()) - 1;
-	if (m_missedLetters >= HANGMAN_STAGES.size() - 1 || m_guessedMask == fullMask) {
+	if (m_missedLetters >= HANGMAN_STAGES.size() - 1) {
 		m_gameState = GameState::FINISH;
 		return true;
 	}
-	else {
-		m_gameState = GameState::UPDATE;
-		return false;
+
+	int fullMask = (1 << m_word.size()) - 1;
+	if (m_guessedMask == fullMask) {
+		m_isWin = true;
+		m_gameState = GameState::FINISH;
+		return true;
 	}
+
+	m_gameState = GameState::UPDATE;
+	return false;
+
 }
 
 void Game::OnRender()
@@ -64,6 +71,17 @@ void Game::OnRender()
 	cout << endl << endl;
 	cout << HANGMAN_STAGES[m_missedLetters];
 	cout << endl << endl;
+
+	if (m_gameState == GameState::FINISH) {
+		if (m_isWin) {
+			cout << "Wygrana, gratulacje!";
+		}
+		else {
+			cout << "Przegrana!";
+		}
+		cin.ignore(256, '\n');
+		cin.ignore();
+	}
 }
 
 void Game::OnShutdown()

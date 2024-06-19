@@ -22,5 +22,6 @@ private:
 	GameState m_gameState = GameState::START;
 	char m_guessedLetter;
 	int m_missedLetters;
+	bool m_isWin;
 
 };
